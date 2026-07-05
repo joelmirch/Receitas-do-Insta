@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Caderneta — Receitas do Instagram</title>
+
+<link rel="apple-touch-icon" href="icone.png">
+<link rel="icon" type="image/png" href="icone.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Caderneta">
+<meta name="theme-color" content="#D62976">
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  :root{
+    --bg:#FAFAFA;--ink:#262626;--ink-soft:#8E8E8E;--line:#DBDBDB;--card:#FFFFFF;
+    --ig-pink:#D62976;--ig-purple:#962FBF;--ig-orange:#FA7E1E;--ig-blue:#4F5BD5;
+    --grad:linear-gradient(45deg,#FEDA75 0%,#FA7E1E 22%,#D62976 55%,#962FBF 78%,#4F5BD5 100%);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,-apple-system,sans-serif;line-height:1.5;padding-bottom:96px;min-height:100vh}
+  ::selection{background:var(--ig-pink);color:#fff}
+  header{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+  .bar{max-width:940px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand .logo{width:30px;height:30px;border-radius:9px;background:var(--grad);flex:none;display:flex;align-items:center;justify-content:center}
+  .brand .logo svg{width:18px;height:18px}
+  .brand h1{font-weight:700;font-size:22px;letter-spacing:-.02em;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .count{font-size:12px;color:var(--ink-soft);white-space:nowrap;display:flex;align-items:center;gap:6px}
+  .sync-dot{width:8px;height:8px;border-radius:50%;background:#2ECC71;flex:none;box-shadow:0 0 0 3px rgba(46,204,113,.15)}
+  .sync-dot.off{background:#ED4956;box-shadow:0 0 0 3px rgba(237,73,86,.15)}
+  .sync-dot.wait{background:#F5A623;box-shadow:0 0 0 3px rgba(245,166,35,.15)}
+  .search{max-width:940px;margin:0 auto;padding:0 16px 14px}
+  .search input{width:100%;padding:11px 16px;border:none;border-radius:12px;background:#EFEFEF;font-size:15px;font-family:inherit;color:var(--ink)}
+  .search input::placeholder{color:var(--ink-soft)}
+  .search input:focus{outline:1.5px solid var(--ig-purple)}
+  main{max-width:940px;margin:0 auto;padding:2px 2px 40px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+  @media(min-width:640px){.grid{gap:4px;padding:0 8px}}
+  .tile{position:relative;aspect-ratio:1/1;overflow:hidden;cursor:pointer;background:#EFEFEF}
+  .tile img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s ease}
+  .tile:active img{transform:scale(.97)}
+  .tile .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--grad);color:#fff;font-size:34px;font-weight:700}
+  .tile .cap{position:absolute;left:0;right:0;bottom:0;padding:18px 10px 8px;background:linear-gradient(to top,rgba(0,0,0,.72),transparent);color:#fff;font-size:12.5px;font-weight:600;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .tile .meta-ic{position:absolute;top:8px;right:8px;display:flex;gap:5px}
+  .tile .meta-ic span{background:rgba(0,0,0,.55);color:#fff;font-size:10px;font-weight:600;padding:3px 7px;border-radius:20px;backdrop-filter:blur(4px)}
+  .empty{text-align:center;padding:80px 24px;color:var(--ink-soft)}
+  .empty .ring{width:82px;height:82px;border-radius:50%;margin:0 auto 18px;background:var(--grad);display:flex;align-items:center;justify-content:center}
+  .empty .ring svg{width:38px;height:38px}
+  .empty p{font-size:15px;max-width:300px;margin:0 auto}
+  .empty b{color:var(--ink)}
+  .banner{max-width:940px;margin:0 auto 4px;padding:0 16px}
+  .banner .box{background:#FDECEA;border:1px solid #F5C6C0;color:#B4291E;border-radius:12px;padding:12px 14px;font-size:13.5px;line-height:1.5}
+  .loading{text-align:center;padding:70px 24px;color:var(--ink-soft);font-size:15px}
+  .fab{position:fixed;right:18px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:30;background:var(--grad);color:#fff;border:none;border-radius:50%;width:60px;height:60px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 22px rgba(214,41,118,.45)}
+  .fab:active{transform:scale(.94)}
+  .fab svg{width:28px;height:28px}
+  .fab[disabled]{opacity:.5;pointer-events:none}
+  .scrim{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center}
+  .scrim.open{display:flex}
+  @media(min-width:640px){.scrim.open{align-items:center}}
+  .sheet{background:var(--bg);width:100%;max-width:560px;max-height:94vh;overflow-y:auto;border-radius:20px 20px 0 0;animation:rise .28s cubic-bezier(.2,.8,.2,1)}
+  @media(min-width:640px){.sheet{border-radius:20px;animation:pop .22s ease}}
+  @keyframes rise{from{transform:translateY(30px);opacity:.7}to{transform:translateY(0);opacity:1}}
+  @keyframes pop{from{transform:scale(.97);opacity:0}to{transform:scale(1);opacity:1}}
+  .sheet-head{position:sticky;top:0;background:var(--card);z-index:2;padding:15px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+  .sheet-head .t{font-weight:700;font-size:16px}
+  .sheet-head .save-link{background:none;border:none;font-family:inherit;font-size:15px;font-weight:700;color:var(--ig-blue);cursor:pointer;padding:4px}
+  .sheet-head .save-link[disabled]{opacity:.4;pointer-events:none}
+  .iconbtn{background:none;border:none;color:var(--ink);font-size:15px;cursor:pointer;font-family:inherit;padding:4px;font-weight:500}
+  .sheet-body{padding:18px}
+  label.field{display:block;margin-bottom:16px}
+  label.field .lab{font-size:12px;font-weight:600;color:var(--ink-soft);margin-bottom:6px;display:block}
+  input[type=text],input[type=url],textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--card);font-size:15px;font-family:inherit;color:var(--ink)}
+  input:focus,textarea:focus{outline:1.5px solid var(--ig-purple);border-color:transparent}
+  textarea{resize:vertical;min-height:92px;line-height:1.55}
+  .hint{font-size:12px;color:var(--ink-soft);margin-top:5px}
+  .photo-drop{border-radius:12px;overflow:hidden;background:var(--grad);aspect-ratio:1/1;max-height:280px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;text-align:center;color:#fff}
+  .photo-drop img{width:100%;height:100%;object-fit:cover}
+  .photo-drop .prompt{padding:16px;font-size:14px;font-weight:600}
+  .photo-drop .prompt small{display:block;opacity:.85;font-weight:400;margin-top:4px}
+  .btn{width:100%;padding:13px;border:none;border-radius:11px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;background:var(--grad);color:#fff;margin-top:4px}
+  .btn:active{transform:scale(.99)}
+  .btn[disabled]{opacity:.55;pointer-events:none}
+  .btn.ghost{background:transparent;color:var(--ink-soft);margin-top:4px}
+  .detail-hero{width:100%;aspect-ratio:1/1;max-height:70vh;object-fit:cover;background:var(--grad);display:block}
+  .detail-hero.ph{display:flex;align-items:center;justify-content:center;color:#fff;font-size:64px;font-weight:700}
+  .detail-body{padding:18px}
+  .detail-body h2{font-weight:700;font-size:22px;letter-spacing:-.01em;line-height:1.15;margin-bottom:12px}
+  .ig-link{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:#fff;text-decoration:none;font-weight:600;margin-bottom:20px;padding:8px 14px;background:var(--grad);border-radius:10px}
+  .ig-link svg{width:15px;height:15px}
+  .sec-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);margin:22px 0 10px;display:flex;align-items:center;gap:8px}
+  .sec-title .n{color:var(--ig-pink)}
+  ul.ingr{list-style:none}
+  ul.ingr li{padding:9px 0 9px 24px;position:relative;font-size:15px;border-bottom:1px solid var(--line)}
+  ul.ingr li:last-child{border-bottom:none}
+  ul.ingr li::before{content:'';position:absolute;left:2px;top:16px;width:7px;height:7px;border-radius:50%;background:var(--ig-purple)}
+  ol.steps{list-style:none;counter-reset:s}
+  ol.steps li{counter-increment:s;padding:12px 0 12px 42px;position:relative;font-size:15px;line-height:1.55;border-bottom:1px solid var(--line)}
+  ol.steps li:last-child{border-bottom:none}
+  ol.steps li::before{content:counter(s);position:absolute;left:0;top:11px;width:28px;height:28px;border-radius:50%;background:var(--grad);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+  .detail-actions{display:flex;gap:10px;margin-top:24px}
+  .detail-actions button{flex:1;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;color:var(--ink)}
+  .detail-actions button.danger{color:#ED4956;border-color:#F5C6C0;background:#FDECEA}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="brand">
+      <span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13a2 2 0 0 1 2 2v14a1 1 0 0 1-1 1H6a2 2 0 0 1-2-2z"/><path d="M8 3v4M8 10h7M8 14h5"/></svg></span>
+      <h1>Caderneta</h1>
+    </div>
+    <span class="count"><span class="sync-dot wait" id="syncDot"></span><span id="countText">conectando…</span></span>
+  </div>
+  <div class="search"><input id="search" type="text" placeholder="Buscar receita ou ingrediente…"></div>
+</header>
+<div class="banner" id="banner" style="display:none"><div class="box" id="bannerText"></div></div>
+<main>
+  <div class="loading" id="loading">Carregando receitas…</div>
+  <div class="grid" id="grid" style="display:none"></div>
+  <div class="empty" id="empty" style="display:none">
+    <div class="ring"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13a2 2 0 0 1 2 2v14a1 1 0 0 1-1 1H6a2 2 0 0 1-2-2z"/><path d="M8 3v4M8 10h7M8 14h5"/></svg></div>
+    <p id="emptyMsg">Sua caderneta está vazia. Toque no <b>+</b> para salvar a primeira receita do Instagram.</p>
+  </div>
+</main>
+<button class="fab" id="addBtn" disabled aria-label="Nova receita">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+</button>
+<div class="scrim" id="formScrim">
+  <div class="sheet">
+    <div class="sheet-head">
+      <button class="iconbtn" data-close>Cancelar</button>
+      <span class="t" id="formTitle">Nova receita</span>
+      <button class="save-link" id="saveBtn">Salvar</button>
+    </div>
+    <div class="sheet-body">
+      <div class="photo-drop" id="photoDrop">
+        <div class="prompt" id="photoPrompt">Adicionar foto da receita<small>toque para escolher</small></div>
+        <img id="photoPreview" style="display:none" alt="">
+      </div>
+      <input type="file" id="photoInput" accept="image/*" style="display:none">
+      <label class="field" style="margin-top:16px"><span class="lab">Título</span><input type="text" id="fTitle" placeholder="Ex.: Bolo de fubá cremoso"></label>
+      <label class="field"><span class="lab">Link do post no Instagram</span><input type="url" id="fLink" placeholder="https://instagram.com/p/…"><span class="hint">Guardamos o link para reabrir o post original.</span></label>
+      <label class="field"><span class="lab">Ingredientes</span><textarea id="fIngr" placeholder="Um por linha:&#10;2 xícaras de fubá&#10;3 ovos&#10;1 xícara de açúcar"></textarea></label>
+      <label class="field"><span class="lab">Modo de preparo</span><textarea id="fSteps" placeholder="Um passo por linha:&#10;Bata os ovos com o açúcar&#10;Asse por 40 min a 180°C"></textarea></label>
+      <button class="btn ghost" data-close>Fechar</button>
+    </div>
+  </div>
+</div>
+<div class="scrim" id="detailScrim">
+  <div class="sheet">
+    <div class="sheet-head">
+      <button class="iconbtn" data-close-detail>Voltar</button>
+      <span class="t">Receita</span>
+      <span style="width:44px"></span>
+    </div>
+    <div id="detailContent"></div>
+  </div>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, initializeFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyCgPFDEmZmnpAXkxo318jSKmK-oj9O3EWM",
+  authDomain: "receitas-insta.firebaseapp.com",
+  projectId: "receitas-insta",
+  storageBucket: "receitas-insta.firebasestorage.app",
+  messagingSenderId: "865140632288",
+  appId: "1:865140632288:web:febd1b613a3a304ba8be85"
+};
+let db, colRef;
+try {
+  const app = initializeApp(firebaseConfig);
+  db = initializeFirestore(app, { experimentalAutoDetectLongPolling: true, useFetchStreams: false });
+  colRef = collection(db, "receitas");
+} catch (e) { showFatal("Não foi possível conectar ao Firebase."); }
+let recipes=[], editingId=null, currentPhoto="", currentDetailId=null, ready=false;
+const grid=document.getElementById('grid'), empty=document.getElementById('empty'), emptyMsg=document.getElementById('emptyMsg'), loading=document.getElementById('loading'), countText=document.getElementById('countText'), syncDot=document.getElementById('syncDot'), banner=document.getElementById('banner'), bannerText=document.getElementById('bannerText'), addBtn=document.getElementById('addBtn');
+function setSync(state,text){syncDot.className='sync-dot '+state;if(text)countText.textContent=text;}
+function showBanner(msg){bannerText.innerHTML=msg;banner.style.display='block';}
+function showFatal(msg){loading.style.display='none';showBanner('<b>Erro de conexão.</b> '+msg);setSync('off','offline');}
+if(colRef){
+  const qy=query(colRef,orderBy('created','desc'));
+  onSnapshot(qy,snap=>{
+    recipes=snap.docs.map(d=>({id:d.id,...d.data()}));
+    ready=true;addBtn.disabled=false;loading.style.display='none';
+    setSync('',recipes.length?recipes.length+(recipes.length===1?' receita':' receitas'):'sincronizado');
+    render(document.getElementById('search').value);
+  },err=>{
+    console.error(err);
+    if(err.code==='permission-denied'){showFatal('O banco está com acesso bloqueado. No Firebase, abra <b>Firestore → Regras</b> e permita leitura/escrita.');}
+    else{showFatal('Detalhe: '+err.message);}
+  });
+}
+function render(filter=''){
+  if(!ready)return;
+  const q=(filter||'').trim().toLowerCase();
+  const list=recipes.filter(r=>{if(!q)return true;return (r.title+' '+(r.ingredients||[]).join(' ')).toLowerCase().includes(q);});
+  grid.innerHTML='';
+  if(!list.length){
+    empty.style.display='block';grid.style.display='none';
+    emptyMsg.innerHTML=q?'Nenhuma receita encontrada para <b>'+escapeHtml(filter)+'</b>.':'Sua caderneta está vazia. Toque no <b>+</b> para salvar a primeira receita do Instagram.';
+    return;
+  }
+  empty.style.display='none';grid.style.display='grid';
+  list.forEach(r=>{
+    const tile=document.createElement('div');tile.className='tile';
+    const img=r.photo?`<img src="${r.photo}" alt="">`:`<div class="ph">${initial(r.title)}</div>`;
+    const ni=(r.ingredients||[]).length, ns=(r.steps||[]).length;
+    tile.innerHTML=img+`<div class="meta-ic">${ni?`<span>${ni} ingr</span>`:''}${ns?`<span>${ns} passos</span>`:''}</div><div class="cap">${escapeHtml(r.title||'Sem título')}</div>`;
+    tile.onclick=()=>openDetail(r.id);
+    grid.appendChild(tile);
+  });
+}
+function initial(t){return (t||'?').trim().charAt(0).toUpperCase()||'♥'}
+function escapeHtml(s){return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+const formScrim=document.getElementById('formScrim'),formTitle=document.getElementById('formTitle'),fTitle=document.getElementById('fTitle'),fLink=document.getElementById('fLink'),fIngr=document.getElementById('fIngr'),fSteps=document.getElementById('fSteps'),photoPreview=document.getElementById('photoPreview'),photoPrompt=document.getElementById('photoPrompt'),saveBtn=document.getElementById('saveBtn');
+function openForm(recipe){
+  editingId=recipe?recipe.id:null;currentPhoto=recipe?(recipe.photo||''):'';
+  formTitle.textContent=recipe?'Editar receita':'Nova receita';
+  fTitle.value=recipe?recipe.title:'';fLink.value=recipe?(recipe.link||''):'';
+  fIngr.value=recipe?(recipe.ingredients||[]).join('\n'):'';fSteps.value=recipe?(recipe.steps||[]).join('\n'):'';
+  if(currentPhoto){photoPreview.src=currentPhoto;photoPreview.style.display='block';photoPrompt.style.display='none';}
+  else{photoPreview.style.display='none';photoPrompt.style.display='block';}
+  formScrim.classList.add('open');
+}
+function closeForm(){formScrim.classList.remove('open');}
+addBtn.onclick=()=>openForm(null);
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeForm);
+formScrim.onclick=e=>{if(e.target===formScrim)closeForm();};
+const photoInput=document.getElementById('photoInput');
+document.getElementById('photoDrop').onclick=()=>photoInput.click();
+photoInput.onchange=e=>{
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const max=900;let{width:w,height:h}=img;
+      if(w>max||h>max){const s=max/Math.max(w,h);w=Math.round(w*s);h=Math.round(h*s);}
+      const c=document.createElement('canvas');c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      currentPhoto=c.toDataURL('image/jpeg',0.72);
+      photoPreview.src=currentPhoto;photoPreview.style.display='block';photoPrompt.style.display='none';
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);
+};
+saveBtn.onclick=async()=>{
+  const title=fTitle.value.trim();
+  if(!title){fTitle.focus();fTitle.style.outline='1.5px solid var(--ig-pink)';return;}
+  const data={title,link:fLink.value.trim(),photo:currentPhoto,ingredients:fIngr.value.split('\n').map(s=>s.trim()).filter(Boolean),steps:fSteps.value.split('\n').map(s=>s.trim()).filter(Boolean)};
+  saveBtn.disabled=true;saveBtn.textContent='Salvando…';
+  try{
+    if(editingId){await updateDoc(doc(db,'receitas',editingId),data);}
+    else{data.created=Date.now();await addDoc(colRef,data);}
+    closeForm();
+  }catch(err){alert('Não consegui salvar: '+err.message);}
+  finally{saveBtn.disabled=false;saveBtn.textContent='Salvar';}
+};
+const detailScrim=document.getElementById('detailScrim'),detailContent=document.getElementById('detailContent');
+document.querySelector('[data-close-detail]').onclick=()=>detailScrim.classList.remove('open');
+detailScrim.onclick=e=>{if(e.target===detailScrim)detailScrim.classList.remove('open');};
+window.openDetail=function(id){
+  const r=recipes.find(x=>x.id===id);if(!r)return;
+  currentDetailId=id;
+  const hero=r.photo?`<img class="detail-hero" src="${r.photo}" alt="">`:`<div class="detail-hero ph">${initial(r.title)}</div>`;
+  const igLink=r.link?`<a class="ig-link" href="${escapeHtml(r.link)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>Ver post original</a>`:'';
+  const ingr=(r.ingredients||[]).length?`<div class="sec-title"><span class="n">${r.ingredients.length}</span> Ingredientes</div><ul class="ingr">${r.ingredients.map(i=>`<li>${escapeHtml(i)}</li>`).join('')}</ul>`:'';
+  const steps=(r.steps||[]).length?`<div class="sec-title"><span class="n">${r.steps.length}</span> Modo de preparo</div><ol class="steps">${r.steps.map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ol>`:'';
+  detailContent.innerHTML=hero+`<div class="detail-body"><h2>${escapeHtml(r.title)}</h2>${igLink}${ingr}${steps}<div class="detail-actions"><button onclick="window.editCurrent()">Editar</button><button class="danger" onclick="window.deleteCurrent()">Excluir</button></div></div>`;
+  detailScrim.classList.add('open');
+};
+window.editCurrent=function(){const r=recipes.find(x=>x.id===currentDetailId);detailScrim.classList.remove('open');openForm(r);};
+window.deleteCurrent=async function(){
+  if(!confirm('Excluir esta receita? Some de todos os aparelhos.'))return;
+  try{await deleteDoc(doc(db,'receitas',currentDetailId));detailScrim.classList.remove('open');}
+  catch(err){alert('Não consegui excluir: '+err.message);}
+};
+document.getElementById('search').oninput=e=>render(e.target.value);
+</script>
+</body>
+</html>
